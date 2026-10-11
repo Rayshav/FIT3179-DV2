@@ -1,1 +1,82 @@
-<h1>just some dummy text</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Who Comes to Australia? | International Visitors</title>
+
+    <!-- Fonts: DM Serif Display (headings) and Source Sans 3 (body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/layout.css">
+
+    <!-- Vega, Vega-Lite and Vega-Embed -->
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+
+</head>
+<body>
+
+<!-- Hero Section -->
+<header class="hero">
+    <div class="hero-inner">
+
+        <div class="masthead">
+            <span>FIT3179 Data Visualisation 2</span>
+            <span>October 2026</span>
+        </div>
+
+        <div class="hero-text">
+            <h1>Who comes<br>to Australia,<br>and why?</h1>
+            <p class="standfirst">
+                Millions of people fly in every year to holiday, see family, study or do
+                business. This story follows where they come from, when they arrive, what
+                they spend, and how tourism recovered after the border closed in 2020.
+            </p>
+            <p class="byline">
+                By <strong>Rayshav Thind</strong><br>
+                Data from the Australian Bureau of Statistics and Tourism Research Australia
+            </p>
+        </div>
+
+    </div>
+</header>
+
+<div class="container hero-follow">
+    <div class="stats">
+        <div class="stat">
+            <span class="stat-num">8.4 million</span>
+            <span class="stat-label">trips to Australia by international visitors</span>
+        </div>
+        <div class="stat">
+            <span class="stat-num">$40.5 billion</span>
+            <span class="stat-label">spent by those visitors while they were here</span>
+        </div>
+        <div class="stat">
+            <span class="stat-num">37 nights</span>
+            <span class="stat-label">the average length of a visit</span>
+        </div>
+    </div>
+    <p class="stats-note">
+        Year ending June 2026. Source: Tourism Research Australia, International Visitor Survey.
+    </p>
+
+    <nav class="contents">
+        <h2>In this story</h2>
+        <ol>
+            <li><a href="#big-picture">The big picture</a></li>
+            <li><a href="#where-from">Where they come from</a></li>
+            <li><a href="#when">When they come</a></li>
+            <li><a href="#why-spend">Why they come</a></li>
+            <li><a href="#where-go">Where they go</a></li>
+        </ol>
+    </nav>
+</div>
+
+<script src="js/vega_lite_vis.js"></script>
+</body>
+</html>
