@@ -136,38 +136,144 @@ a { color: var(--teal); }
     text-transform: uppercase;
     color: var(--ink-soft);
 }
+/* Five equal columns that line up with the stats */
 .contents ol {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px 32px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 24px;
     margin: 0;
     padding: 0;
     list-style: none;
     counter-reset: chapter;
 }
-.contents li { counter-increment: chapter; }
+.contents li {
+    counter-increment: chapter;
+    padding-top: 12px;
+    border-top: 2px solid var(--rule);
+}
 .contents li::before {
     content: counter(chapter, decimal-leading-zero);
-    margin-right: 8px;
+    display: block;
+    margin-bottom: 2px;
     font-family: var(--serif);
+    font-size: 22px;
     color: var(--sand-deep);
 }
 .contents a {
     color: var(--ink);
     font-weight: 600;
     text-decoration: none;
-    border-bottom: 1px solid var(--rule);
 }
-.contents a:hover {
-    color: var(--teal);
-    border-color: var(--teal);
-}
+.contents li:hover { border-top-color: var(--teal); }
+.contents a:hover { color: var(--teal); }
 
 /* Highlight for key numbers and insights in the story text */
 .hl {
     font-weight: 700;
     color: var(--teal);
 }
+
+/* Chapters */
+main { padding-bottom: 64px; }
+
+.chapter {
+    margin-bottom: 112px;
+    scroll-margin-top: 24px;
+}
+
+.chapter-num {
+    margin: 0 0 4px;
+    font-family: var(--serif);
+    font-size: 20px;
+    color: var(--sand-deep);
+}
+
+.chapter h2 {
+    margin: 0;
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 42px;
+    line-height: 1.15;
+    color: var(--ink);
+}
+
+.chapter-sub {
+    margin: 6px 0 28px;
+    font-size: 20px;
+    color: var(--ink-soft);
+}
+
+/* Chart cards */
+.chart-card {
+    margin: 36px 0 28px;
+    padding: 28px 28px 20px;
+    background: #fffdf9;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+}
+
+.chart-title {
+    margin: 0;
+    font-size: 21px;
+    font-weight: 700;
+    color: var(--ink);
+}
+
+.chart-sub {
+    margin: 2px 0 20px;
+    font-size: 16px;
+    color: var(--ink-soft);
+}
+
+/* Heading on the left, story text on the right */
+.chapter-head {
+    display: grid;
+    grid-template-columns: 5fr 7fr;
+    gap: 56px;
+    align-items: start;
+    margin-bottom: 8px;
+}
+.chapter-head .chapter-sub { margin-bottom: 0; }
+
+.chapter-text { padding-top: 34px; }
+.chapter-text p { margin: 0 0 18px; }
+
+figcaption {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--rule);
+    font-size: 13px;
+    color: var(--ink-soft);
+}
+
+.callout {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 32px;
+    align-items: center;
+    padding: 26px 32px;
+    background: #f1e6d4;
+    border-left: 4px solid var(--sand-deep);
+    border-radius: 0 8px 8px 0;
+}
+.callout-num {
+    margin: 0;
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 64px;
+    line-height: 1;
+    color: var(--teal);
+}
+.callout-text {
+    margin: 0;
+    max-width: 52ch;
+    font-family: var(--serif);
+    font-size: 22px;
+    line-height: 1.4;
+    color: var(--ink);
+}
+
+.vis { width: 100%; }
 
 /* Narrow screens */
 @media (max-width: 760px) {
@@ -179,4 +285,8 @@ a { color: var(--teal); }
     }
     .stat + .stat { border-top: 1px solid var(--rule); }
     .hero-text { max-width: none; }
+    .chapter-head,
+    .callout { grid-template-columns: 1fr; gap: 12px; }
+    .chapter-text { padding-top: 0; }
+    .contents ol { grid-template-columns: 1fr 1fr; }
 }

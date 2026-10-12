@@ -1,0 +1,258 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Short-term visitor arrivals to Australia each month, January 1991 to July 2026, with the COVID-19 border closure shaded.",
+  "width": "container",
+  "height": 380,
+  "data": {
+    "url": "data/arrivals_total_monthly.csv"
+  },
+  "transform": [
+    {
+      "calculate": "toDate(datum.month + '-01')",
+      "as": "date"
+    },
+    {
+      "calculate": "datum.arrivals / 1000",
+      "as": "arrivals_k"
+    }
+  ],
+  "config": {
+    "font": "Source Sans 3",
+    "background": "transparent",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelFontSize": 13,
+      "labelColor": "#4f6670",
+      "titleFontSize": 13,
+      "titleFontWeight": 600,
+      "titleColor": "#4f6670",
+      "gridColor": "#e9dfcf",
+      "domainColor": "#cdbb9e",
+      "tickColor": "#cdbb9e"
+    }
+  },
+  "layer": [
+    {
+      "description": "Shaded band for the border closure",
+      "data": {
+        "values": [
+          {
+            "start": "2020-03-20",
+            "end": "2022-02-21"
+          }
+        ]
+      },
+      "mark": {
+        "type": "rect",
+        "color": "#e8d4b4",
+        "opacity": 0.55
+      },
+      "encoding": {
+        "x": {
+          "field": "start",
+          "type": "temporal"
+        },
+        "x2": {
+          "field": "end"
+        }
+      }
+    },
+    {
+      "description": "Label for the border closure band",
+      "data": {
+        "values": [
+          {
+            "date": "2020-03-20",
+            "y": 230
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "align": "right",
+        "dx": -8,
+        "fontSize": 13,
+        "fontWeight": 700,
+        "lineHeight": 17,
+        "color": "#8a6233",
+        "text": [
+          "Border closed to tourists",
+          "March 2020 to February 2022"
+        ]
+      },
+      "encoding": {
+        "x": {
+          "field": "date",
+          "type": "temporal"
+        },
+        "y": {
+          "field": "y",
+          "type": "quantitative"
+        }
+      }
+    },
+    {
+      "description": "Monthly arrivals",
+      "mark": {
+        "type": "line",
+        "color": "#0f7472",
+        "strokeWidth": 1.6
+      },
+      "encoding": {
+        "x": {
+          "field": "date",
+          "type": "temporal",
+          "title": null,
+          "axis": {
+            "format": "%Y",
+            "tickCount": {
+              "interval": "year",
+              "step": 5
+            },
+            "grid": false
+          }
+        },
+        "y": {
+          "field": "arrivals_k",
+          "type": "quantitative",
+          "title": "Visitor arrivals per month (thousands)",
+          "axis": {
+            "values": [
+              0,
+              200,
+              400,
+              600,
+              800,
+              1000
+            ]
+          },
+          "scale": {
+            "domain": [
+              0,
+              1200
+            ]
+          }
+        }
+      }
+    },
+    {
+      "description": "Record month annotation",
+      "data": {
+        "values": [
+          {
+            "date": "2019-12-01",
+            "y": 1077.72
+          }
+        ]
+      },
+      "layer": [
+        {
+          "mark": {
+            "type": "point",
+            "filled": true,
+            "size": 50,
+            "color": "#0f7472"
+          }
+        },
+        {
+          "mark": {
+            "type": "rule",
+            "color": "#17303a",
+            "strokeWidth": 1
+          },
+          "encoding": {
+            "y": {
+              "datum": 1095
+            },
+            "y2": {
+              "datum": 1135
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "align": "right",
+            "baseline": "bottom",
+            "dx": 6,
+            "fontSize": 13,
+            "color": "#17303a",
+            "text": "December 2019: 1.08 million, the busiest month on record"
+          },
+          "encoding": {
+            "y": {
+              "datum": 1140
+            }
+          }
+        }
+      ],
+      "encoding": {
+        "x": {
+          "field": "date",
+          "type": "temporal"
+        },
+        "y": {
+          "field": "y",
+          "type": "quantitative"
+        }
+      }
+    },
+    {
+      "description": "Hover: invisible points that show a tooltip for the nearest month",
+      "params": [
+        {
+          "name": "hover",
+          "select": {
+            "type": "point",
+            "fields": [
+              "date"
+            ],
+            "nearest": true,
+            "on": "pointerover",
+            "clear": "pointerout"
+          }
+        }
+      ],
+      "mark": {
+        "type": "point",
+        "filled": true,
+        "size": 70,
+        "color": "#0f7472"
+      },
+      "encoding": {
+        "x": {
+          "field": "date",
+          "type": "temporal"
+        },
+        "y": {
+          "field": "arrivals_k",
+          "type": "quantitative"
+        },
+        "opacity": {
+          "condition": {
+            "param": "hover",
+            "empty": false,
+            "value": 1
+          },
+          "value": 0
+        },
+        "tooltip": [
+          {
+            "field": "date",
+            "type": "temporal",
+            "title": "Month",
+            "format": "%B %Y"
+          },
+          {
+            "field": "arrivals",
+            "type": "quantitative",
+            "title": "Visitor arrivals",
+            "format": ","
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+vegaEmbed("#chart_01", "js/01_line_arrivals.json", { actions: false });
