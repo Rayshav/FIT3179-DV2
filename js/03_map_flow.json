@@ -1,0 +1,421 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Flow map of the top 10 source countries for visitors to Australia. Line width shows the number of visitor arrivals. Buttons switch between 2019 (before COVID-19) and 2025.",
+  "width": "container",
+  "height": 540,
+  "params": [
+    {
+      "name": "flowYear",
+      "value": 2025,
+      "bind": {
+        "input": "radio",
+        "options": [
+          2019,
+          2025
+        ],
+        "labels": [
+          "2019 (before COVID)",
+          "2025"
+        ],
+        "name": "Year "
+      }
+    }
+  ],
+  "projection": {
+    "type": "equalEarth",
+    "rotate": [
+      -150,
+      0,
+      0
+    ]
+  },
+  "config": {
+    "font": "Source Sans 3",
+    "background": "transparent",
+    "view": {
+      "stroke": null
+    }
+  },
+  "layer": [
+    {
+      "description": "Base map",
+      "data": {
+        "url": "data/countries-110m.json",
+        "format": {
+          "type": "topojson",
+          "feature": "countries"
+        }
+      },
+      "transform": [
+        {
+          "filter": "datum.id !== '010'"
+        }
+      ],
+      "mark": {
+        "type": "geoshape",
+        "fill": "#e6dccb",
+        "stroke": "#fffdf9",
+        "strokeWidth": 0.5
+      }
+    },
+    {
+      "description": "Australia, the destination",
+      "data": {
+        "url": "data/countries-110m.json",
+        "format": {
+          "type": "topojson",
+          "feature": "countries"
+        }
+      },
+      "transform": [
+        {
+          "filter": "datum.id === '036'"
+        }
+      ],
+      "mark": {
+        "type": "geoshape",
+        "fill": "#b8894f",
+        "stroke": "#fffdf9",
+        "strokeWidth": 0.5
+      }
+    },
+    {
+      "description": "Top 10 countries in the chosen year: flow lines, origin dots and labels",
+      "data": {
+        "url": "data/arrivals_by_country_year.csv"
+      },
+      "transform": [
+        {
+          "calculate": "toNumber(datum.year)",
+          "as": "year_num"
+        },
+        {
+          "filter": "datum.year_num === flowYear && datum.rank <= 10"
+        },
+        {
+          "calculate": "-25",
+          "as": "aus_lat"
+        },
+        {
+          "calculate": "134",
+          "as": "aus_lon"
+        },
+        {
+          "calculate": "datum.arrivals >= 1000000 ? format(datum.arrivals / 1000000, '.2f') + 'm' : format(datum.arrivals / 1000, '.0f') + 'k'",
+          "as": "short"
+        },
+        {
+          "lookup": "country",
+          "from": {
+            "data": {
+              "values": [
+                {
+                  "country": "New Zealand",
+                  "dlon": 3,
+                  "dlat": 0,
+                  "align": "left"
+                },
+                {
+                  "country": "China",
+                  "dlon": -4,
+                  "dlat": 0,
+                  "align": "right"
+                },
+                {
+                  "country": "United Kingdom",
+                  "dlon": 0,
+                  "dlat": 6,
+                  "align": "center"
+                },
+                {
+                  "country": "United States",
+                  "dlon": 0,
+                  "dlat": 6,
+                  "align": "center"
+                },
+                {
+                  "country": "India",
+                  "dlon": -4,
+                  "dlat": 0,
+                  "align": "right"
+                },
+                {
+                  "country": "Singapore",
+                  "dlon": -4,
+                  "dlat": -2.5,
+                  "align": "right"
+                },
+                {
+                  "country": "Malaysia",
+                  "dlon": -4,
+                  "dlat": 2.5,
+                  "align": "right"
+                },
+                {
+                  "country": "Japan",
+                  "dlon": 4,
+                  "dlat": -2,
+                  "align": "left"
+                },
+                {
+                  "country": "South Korea",
+                  "dlon": 0,
+                  "dlat": 6,
+                  "align": "center"
+                },
+                {
+                  "country": "Hong Kong",
+                  "dlon": 4,
+                  "dlat": -1,
+                  "align": "left"
+                },
+                {
+                  "country": "Indonesia",
+                  "dlon": 4,
+                  "dlat": -4,
+                  "align": "left"
+                }
+              ]
+            },
+            "key": "country",
+            "fields": [
+              "dlon",
+              "dlat",
+              "align"
+            ]
+          }
+        },
+        {
+          "calculate": "toNumber(datum.lon) + datum.dlon",
+          "as": "label_lon"
+        },
+        {
+          "calculate": "toNumber(datum.lat) + datum.dlat",
+          "as": "label_lat"
+        },
+        {
+          "calculate": "datum.country + '  ' + datum.short",
+          "as": "label"
+        }
+      ],
+      "layer": [
+        {
+          "mark": {
+            "type": "rule",
+            "color": "#0f7472",
+            "opacity": 0.55,
+            "strokeCap": "round"
+          },
+          "encoding": {
+            "longitude": {
+              "field": "lon",
+              "type": "quantitative"
+            },
+            "latitude": {
+              "field": "lat",
+              "type": "quantitative"
+            },
+            "longitude2": {
+              "field": "aus_lon"
+            },
+            "latitude2": {
+              "field": "aus_lat"
+            },
+            "strokeWidth": {
+              "field": "arrivals",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  0,
+                  1500000
+                ],
+                "range": [
+                  0.5,
+                  11
+                ]
+              },
+              "legend": null
+            },
+            "tooltip": [
+              {
+                "field": "country",
+                "title": "Country"
+              },
+              {
+                "field": "year",
+                "title": "Year"
+              },
+              {
+                "field": "arrivals",
+                "type": "quantitative",
+                "title": "Visitor arrivals",
+                "format": ","
+              },
+              {
+                "field": "rank",
+                "type": "quantitative",
+                "title": "Rank"
+              }
+            ]
+          }
+        },
+        {
+          "mark": {
+            "type": "circle",
+            "color": "#0f7472",
+            "opacity": 1,
+            "size": 45,
+            "stroke": "#fffdf9",
+            "strokeWidth": 1
+          },
+          "encoding": {
+            "longitude": {
+              "field": "lon",
+              "type": "quantitative"
+            },
+            "latitude": {
+              "field": "lat",
+              "type": "quantitative"
+            },
+            "tooltip": [
+              {
+                "field": "country",
+                "title": "Country"
+              },
+              {
+                "field": "year",
+                "title": "Year"
+              },
+              {
+                "field": "arrivals",
+                "type": "quantitative",
+                "title": "Visitor arrivals",
+                "format": ","
+              },
+              {
+                "field": "rank",
+                "type": "quantitative",
+                "title": "Rank"
+              }
+            ]
+          }
+        },
+        {
+          "transform": [
+            {
+              "filter": "datum.align === 'left'"
+            }
+          ],
+          "mark": {
+            "type": "text",
+            "fontSize": 12,
+            "fontWeight": 600,
+            "color": "#17303a",
+            "baseline": "middle",
+            "align": "left"
+          },
+          "encoding": {
+            "longitude": {
+              "field": "label_lon",
+              "type": "quantitative"
+            },
+            "latitude": {
+              "field": "label_lat",
+              "type": "quantitative"
+            },
+            "text": {
+              "field": "label"
+            }
+          }
+        },
+        {
+          "transform": [
+            {
+              "filter": "datum.align === 'right'"
+            }
+          ],
+          "mark": {
+            "type": "text",
+            "fontSize": 12,
+            "fontWeight": 600,
+            "color": "#17303a",
+            "baseline": "middle",
+            "align": "right"
+          },
+          "encoding": {
+            "longitude": {
+              "field": "label_lon",
+              "type": "quantitative"
+            },
+            "latitude": {
+              "field": "label_lat",
+              "type": "quantitative"
+            },
+            "text": {
+              "field": "label"
+            }
+          }
+        },
+        {
+          "transform": [
+            {
+              "filter": "datum.align === 'center'"
+            }
+          ],
+          "mark": {
+            "type": "text",
+            "fontSize": 12,
+            "fontWeight": 600,
+            "color": "#17303a",
+            "baseline": "middle",
+            "align": "center"
+          },
+          "encoding": {
+            "longitude": {
+              "field": "label_lon",
+              "type": "quantitative"
+            },
+            "latitude": {
+              "field": "label_lat",
+              "type": "quantitative"
+            },
+            "text": {
+              "field": "label"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "description": "Label for Australia",
+      "data": {
+        "values": [
+          {
+            "lon": 134,
+            "lat": -29,
+            "label": "Australia"
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "fontSize": 12,
+        "fontWeight": 700,
+        "color": "#fffdf9"
+      },
+      "encoding": {
+        "longitude": {
+          "field": "lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "label"
+        }
+      }
+    }
+  ]
+}

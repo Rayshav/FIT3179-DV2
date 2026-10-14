@@ -1,0 +1,320 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Bump chart of the ranking (by visitor arrivals) of Australia's top 10 source countries in 2025, in selected years from 1991 to 2025. Each country has its own colour; hover over a line to highlight one country.",
+  "width": "container",
+  "height": 460,
+  "data": {
+    "url": "data/arrivals_by_country_year.csv"
+  },
+  "transform": [
+    {
+      "calculate": "toNumber(datum.year)",
+      "as": "year_num"
+    },
+    {
+      "calculate": "toNumber(datum.rank)",
+      "as": "rank_num"
+    },
+    {
+      "filter": {
+        "field": "year_num",
+        "oneOf": [
+          1991,
+          1995,
+          2000,
+          2005,
+          2010,
+          2015,
+          2019,
+          2025
+        ]
+      }
+    },
+    {
+      "filter": {
+        "field": "country",
+        "oneOf": [
+          "New Zealand",
+          "China",
+          "United Kingdom",
+          "United States",
+          "India",
+          "Singapore",
+          "Japan",
+          "South Korea",
+          "Hong Kong",
+          "Indonesia"
+        ]
+      }
+    }
+  ],
+  "encoding": {
+    "x": {
+      "field": "year_num",
+      "type": "ordinal",
+      "title": null,
+      "axis": {
+        "labelAngle": 0,
+        "domain": false,
+        "ticks": false,
+        "labelPadding": 10
+      }
+    },
+    "y": {
+      "field": "rank_num",
+      "type": "quantitative",
+      "title": "Rank",
+      "scale": {
+        "reverse": true,
+        "domain": [
+          1,
+          26
+        ],
+        "nice": false
+      },
+      "axis": {
+        "values": [
+          1,
+          5,
+          10,
+          15,
+          20,
+          25
+        ],
+        "grid": true,
+        "offset": 118,
+        "domain": false,
+        "ticks": false,
+        "titlePadding": 8
+      }
+    },
+    "color": {
+      "field": "country",
+      "type": "nominal",
+      "scale": {
+        "domain": [
+          "New Zealand",
+          "China",
+          "United Kingdom",
+          "United States",
+          "India",
+          "Singapore",
+          "Japan",
+          "South Korea",
+          "Hong Kong",
+          "Indonesia"
+        ],
+        "range": [
+          "#0f7472",
+          "#b4532a",
+          "#3b6ea5",
+          "#7b5ea7",
+          "#d49a3a",
+          "#c45a85",
+          "#4f6670",
+          "#5c9a4a",
+          "#8c6a3f",
+          "#2a9fb3"
+        ]
+      },
+      "legend": null
+    },
+    "detail": {
+      "field": "country"
+    },
+    "opacity": {
+      "condition": [
+        {
+          "param": "pick",
+          "empty": true,
+          "value": 1
+        }
+      ],
+      "value": 0.15
+    }
+  },
+  "config": {
+    "font": "Source Sans 3",
+    "background": "transparent",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelFontSize": 13,
+      "labelColor": "#4f6670",
+      "titleFontSize": 13,
+      "titleFontWeight": 600,
+      "titleColor": "#4f6670",
+      "gridColor": "#efe6d6",
+      "domainColor": "#cdbb9e",
+      "tickColor": "#cdbb9e"
+    }
+  },
+  "layer": [
+    {
+      "mark": {
+        "type": "line",
+        "strokeWidth": 3,
+        "interpolate": "monotone"
+      }
+    },
+    {
+      "mark": {
+        "type": "circle",
+        "size": 70,
+        "opacity": 1,
+        "stroke": "#fffdf9",
+        "strokeWidth": 1.5
+      },
+      "encoding": {
+        "tooltip": [
+          {
+            "field": "country",
+            "title": "Country"
+          },
+          {
+            "field": "year",
+            "title": "Year"
+          },
+          {
+            "field": "rank_num",
+            "type": "quantitative",
+            "title": "Rank"
+          },
+          {
+            "field": "arrivals",
+            "type": "quantitative",
+            "title": "Visitor arrivals",
+            "format": ","
+          }
+        ]
+      },
+      "params": [
+        {
+          "name": "pick",
+          "select": {
+            "type": "point",
+            "fields": [
+              "country"
+            ],
+            "on": "pointerover",
+            "clear": "pointerout"
+          }
+        }
+      ]
+    },
+    {
+      "description": "Country names at the right-hand end (2025)",
+      "transform": [
+        {
+          "filter": "datum.year_num === 2025"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 10,
+        "fontSize": 13,
+        "fontWeight": 600
+      },
+      "encoding": {
+        "text": {
+          "field": "country"
+        },
+        "color": {
+          "field": "country",
+          "type": "nominal",
+          "legend": null,
+          "scale": {
+            "domain": [
+              "New Zealand",
+              "China",
+              "United Kingdom",
+              "United States",
+              "India",
+              "Singapore",
+              "Japan",
+              "South Korea",
+              "Hong Kong",
+              "Indonesia"
+            ],
+            "range": [
+              "#0f7472",
+              "#b4532a",
+              "#3b6ea5",
+              "#7b5ea7",
+              "#a87412",
+              "#b34a74",
+              "#4f6670",
+              "#4a8439",
+              "#7a5b34",
+              "#1f8496"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "description": "Country names at the left-hand end (1991)",
+      "transform": [
+        {
+          "filter": "datum.year_num === 1991"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "right",
+        "dx": -10,
+        "fontSize": 13,
+        "fontWeight": 600
+      },
+      "encoding": {
+        "text": {
+          "field": "country"
+        },
+        "color": {
+          "field": "country",
+          "type": "nominal",
+          "legend": null,
+          "scale": {
+            "domain": [
+              "New Zealand",
+              "China",
+              "United Kingdom",
+              "United States",
+              "India",
+              "Singapore",
+              "Japan",
+              "South Korea",
+              "Hong Kong",
+              "Indonesia"
+            ],
+            "range": [
+              "#0f7472",
+              "#b4532a",
+              "#3b6ea5",
+              "#7b5ea7",
+              "#a87412",
+              "#b34a74",
+              "#4f6670",
+              "#4a8439",
+              "#7a5b34",
+              "#1f8496"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "resolve": {
+    "scale": {
+      "color": "independent"
+    }
+  },
+  "padding": {
+    "left": 5,
+    "right": 40,
+    "top": 10,
+    "bottom": 5
+  }
+}

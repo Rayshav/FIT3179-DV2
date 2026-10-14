@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Who Comes to Australia? | International Visitors</title>
 
-    <!-- Fonts: DM Serif Display (headings) and Source Sans 3 (body) -->
+    <!-- Fonts: Barlow Condensed (headings and big numbers) and Source Sans 3 (body and charts) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="css/layout.css">
 
@@ -17,19 +16,16 @@
     <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
-
 </head>
 <body>
 
 <!-- Hero Section -->
 <header class="hero">
     <div class="hero-inner">
-
         <div class="masthead">
             <span>FIT3179 Data Visualisation 2</span>
             <span>October 2026</span>
         </div>
-
         <div class="hero-text">
             <h1>Who comes<br>to Australia,<br>and why?</h1>
             <p class="standfirst">
@@ -42,11 +38,10 @@
                 Data from the Australian Bureau of Statistics and Tourism Research Australia
             </p>
         </div>
-
     </div>
 </header>
 
-<div class="container hero-follow">
+<div class="page intro-strip">
     <div class="stats">
         <div class="stat">
             <span class="stat-num">8.4 million</span>
@@ -63,63 +58,235 @@
     </div>
     <p class="stats-note">
         Year ending June 2026. Source: Tourism Research Australia, International Visitor Survey.
+        Average stay is total nights (314.9 million) divided by trips (8.4 million).
     </p>
-
-    <nav class="contents">
-        <h2>In this story</h2>
-        <ol>
-            <li><a href="#big-picture">The big picture</a></li>
-            <li><a href="#where-from">Where they come from</a></li>
-            <li><a href="#when">When they come</a></li>
-            <li><a href="#why-spend">Why they come</a></li>
-            <li><a href="#where-go">Where they go</a></li>
-        </ol>
-    </nav>
 </div>
 
-<main class="container">
+<main>
 
-    <!-- 01 The Big Picture Section -->
-    <section id="big-picture" class="chapter">
+<!-- 1 The Big Picture Section -->
+<section id="big-picture" class="chapter">
 
-    <div class="chapter-head">
-        <div>
-            <p class="chapter-num">01</p>
-            <h2>The big picture</h2>
-            <p class="chapter-sub">How many visitors come, and what happened when the border closed</p>
+    <header class="band">
+        <div class="page grid">
+            <div class="band-head">
+                <h2><span class="band-num">1</span>The Big Picture</h2>
+                <p class="band-sub">How many visitors come, and what happened when the border closed</p>
+            </div>
+            <div class="band-text">
+                <p>
+                    In 1991, visitors made <span class="hl">2.4 million</span> trips to Australia.
+                    By 2019, that had almost quadrupled to <span class="hl">9.5 million</span>.
+                </p>
+                <p>
+                    Then COVID-19 hit. In 2021 just <span class="hl">246,240</span> visitors arrived
+                    all year. Even in 2025, arrivals were still below their 2019 peak.
+                </p>
+            </div>
         </div>
-        <div class="chapter-text">
+    </header>
+
+    <div class="page figure">
+        <div class="lede grid">
+            <h3 class="lede-title">35 years of arrivals</h3>
+            <p class="lede-text">
+                Arrivals grew steadily for three decades, peaking at
+                <span class="hl">1.08 million</span> in December 2019.
+                Then the line falls almost straight to zero.
+            </p>
+            <p class="how-to">Each spike is a December. Hover over the line to see any month.</p>
+        </div>
+        <figure class="chart-card">
+            <div id="chart_01" class="vis"></div>
+            <figcaption>
+                Counts trips, not people: someone who visits twice is counted twice.
+                Short-term visitors live overseas and stay less than a year.
+                Source: Australian Bureau of Statistics, Overseas Arrivals and Departures, Table 5.
+            </figcaption>
+        </figure>
+        <div class="reading">
             <p>
-                In 1991, visitors made <span class="hl">2.4 million</span> trips to Australia.
-                By 2019, that had almost quadrupled to <span class="hl">9.5 million</span>.
-                Then COVID-19 hit, and in 2021 just <span class="hl">246,240</span> visitors
-                arrived all year.
+                For most of the last 35 years, international tourism only moved in one direction.
+                Annual visitor arrivals doubled from <span class="hl">2.4 million</span> in 1991
+                to 4.9 million in 2000. Growth paused in the early 2000s, the years of the
+                September 11 attacks and the SARS outbreak, and flattened again around the
+                2008 global financial crisis, but it never went backwards for long.
             </p>
             <p>
-                Tourists returned once the border reopened in February 2022. But in 2025,
-                arrivals were still below their 2019 peak.
+                The 2010s were the boom years. Arrivals rose <span class="hl">61%</span> in a
+                decade, from 5.9 million in 2010 to a record 9.5 million in 2019. The rhythm
+                of the line stayed the same throughout: a sharp peak every December, when
+                summer holidays and Christmas bring visitors from around the world.
+            </p>
+            <p>
+                Then, in March 2020, the border closed and the line fell off a cliff. In 2021
+                just <span class="hl">246,240</span> visitors arrived all year, fewer than in a
+                single quiet month before COVID. After reopening in February 2022, arrivals
+                climbed back quickly. By 2025 they reached 8.9 million, or
+                <span class="hl">94%</span> of the 2019 record.
             </p>
         </div>
     </div>
 
-    <figure class="chart-card">
-        <h3 class="chart-title">Visitor arrivals each month, 1991 to 2026</h3>
-        <p class="chart-sub">Hover over the line to see any month. The yearly spikes are December holidays.</p>
-        <div id="chart_01" class="vis"></div>
-        <figcaption>
-            Counts trips, not people: someone who visits twice is counted twice.
-            Short-term visitors live overseas and stay less than a year.
-            Source: Australian Bureau of Statistics, Overseas Arrivals and Departures, Table 5.
-        </figcaption>
-    </figure>
+    <aside class="callout">
+        <div class="page grid callout-inner">
+            <p class="callout-num">99.8%</p>
+            <p class="callout-text">
+                The fall in visitor arrivals in just four months, from
+                <span class="hl">1.08 million</span> in December 2019 to
+                <span class="hl">2,250</span> in April 2020.
+            </p>
+        </div>
+    </aside>
+
+</section>
+
+<!-- 2 Where They Come From Section -->
+<section id="where-from" class="chapter">
+
+    <header class="band">
+        <div class="page grid">
+            <div class="band-head">
+                <h2><span class="band-num">2</span>Where Do They Come From?</h2>
+                <p class="band-sub">Our closest neighbour, our biggest markets, and how the mix has changed</p>
+            </div>
+            <div class="band-text">
+                <p>
+                    In 2025, <span class="hl">New Zealand</span> sent the most visitors:
+                    1.44 million trips, about <span class="hl">one in six</span> of all arrivals.
+                </p>
+                <p>
+                    Behind it, the mix keeps changing. COVID reshuffled who comes, and over
+                    35 years the order of our biggest markets has been rewritten.
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <div class="page figure">
+        <div class="lede grid">
+            <h3 class="lede-title">Where visitors live</h3>
+            <p class="lede-text">
+                Visitors come mostly from our own region. In 2025,
+                <span class="hl">17 countries</span> sent more than 100,000 visitors each,
+                and most of them are in Asia and the Pacific.
+            </p>
+            <p class="how-to">Darker countries send more visitors. Drag the slider to see any year from 1991 to 2025.</p>
+        </div>
+        <figure class="chart-card">
+            <div id="chart_02" class="vis"></div>
+            <figcaption>
+                Only the 50 countries the ABS lists separately are coloured; others are shown in sand.
+                Singapore and Hong Kong are dots because they are too small to see.
+                Calendar-year totals. Source: Australian Bureau of Statistics, Table 5; map: Natural Earth.
+            </figcaption>
+        </figure>
+        <div class="reading">
+            <p>
+                The darkest shades cluster around us. New Zealand and China together made
+                <span class="hl">28%</span> of all visitor arrivals in 2025, and the ten
+                biggest countries made 69%. Our nearest neighbours in Asia and the Pacific
+                supply most of the rest.
+            </p>
+            <p>
+                Distance is not everything. The United Kingdom and the United States are on
+                the other side of the world, yet each sent around
+                <span class="hl">750,000</span> visitors in 2025. Many of these trips are
+                likely visits to friends and relatives, through migration links that go
+                back generations.
+            </p>
+            <p>
+                Europe as a whole is smaller than it looks on the map. The 16 European
+                countries the ABS lists sent <span class="hl">1.58 million</span> visitors
+                between them in 2025, only slightly more than New Zealand alone. Drag the
+                slider back through the years to watch Asia's shades darken.
+            </p>
+        </div>
+    </div>
+
+    <div class="page figure">
+        <div class="lede grid">
+            <h3 class="lede-title">Before and after COVID</h3>
+            <p class="lede-text">
+                The pandemic did not hit every route equally. Some markets came back
+                bigger than before, while others are still <span class="hl">well short</span>
+                of 2019.
+            </p>
+            <p class="how-to">Thicker lines mean more visitors. Switch between 2019 and 2025 to compare.</p>
+        </div>
+        <figure class="chart-card">
+            <div id="chart_03" class="vis"></div>
+            <figcaption>
+                Lines join the middle of each country to the middle of Australia; they are not real flight paths.
+                Source: Australian Bureau of Statistics, Table 5.
+            </figcaption>
+        </figure>
+        <div class="reading">
+            <p>
+                New Zealand's line is almost exactly the same width in both years, about
+                <span class="hl">1.43 million</span> trips. The United Kingdom has gone
+                further, growing 6% past its pre-COVID level and moving up to third place.
+            </p>
+            <p>
+                China's route tells the opposite story. It was our busiest in 2019, but in
+                2025 it was still <span class="hl">28% smaller</span>, enough to drop it to
+                second place. Hong Kong was down 21% and Japan 15%. Malaysia fell 44% and
+                left the top 10 altogether.
+            </p>
+            <p>
+                A few markets came back stronger. South Korea grew
+                <span class="hl">42%</span> and India 13%, and Indonesia joined the top 10.
+                The recovery was not a return to the old normal: it changed who visits
+                Australia.
+            </p>
+        </div>
+    </div>
+
+    <div class="page figure">
+        <div class="lede grid">
+            <h3 class="lede-title">35 years of reshuffling</h3>
+            <p class="lede-text">
+                Over 35 years, the order of the top 10 has been rewritten. Three countries,
+                <span class="hl">China, India and Japan</span>, tell most of the story.
+            </p>
+            <p class="how-to">Each line is one of today's top 10. Hover over any line to follow that country.</p>
+        </div>
+        <figure class="chart-card">
+            <div id="chart_04" class="vis"></div>
+            <figcaption>
+                Ranked among the 50 countries the ABS lists separately; selected years only.
+                China excludes Hong Kong and Taiwan; United Kingdom includes the Channel Islands and Isle of Man.
+                Source: Australian Bureau of Statistics, Table 5.
+            </figcaption>
+        </figure>
+        <div class="reading">
+            <p>
+                China's climb is the steepest line on the chart. It ranked
+                <span class="hl">21st</span> in 1991, broke into the top five by 2005, and
+                overtook New Zealand as our largest market in 2018 and 2019.
+            </p>
+            <p>
+                India took a slower but steadier path. It sat 26th in 1991 and has moved
+                up in every decade since, reaching <span class="hl">5th</span> in 2025 with
+                451,530 visitors.
+            </p>
+            <p>
+                Japan shows the reverse. It was our largest market in the early 1990s,
+                peaking at 813,890 visitors in 1997, then slid to <span class="hl">7th</span>.
+                In 2025 it sent 423,120 visitors, fewer than in 1991.
+            </p>
+        </div>
+    </div>
 
     <aside class="callout">
-        <p class="callout-num">99.8%</p>
-        <p class="callout-text">
-            The fall in visitor arrivals in just four months, from
-            <span class="hl">1.08 million</span> in December 2019 to
-            <span class="hl">2,250</span> in April 2020.
-        </p>
+        <div class="page grid callout-inner">
+            <p class="callout-num">88×</p>
+            <p class="callout-text">
+                China's growth between 1991 and 2019, from just
+                <span class="hl">16,420</span> visitors to
+                <span class="hl">1.44&nbsp;million</span>.
+            </p>
+        </div>
     </aside>
 
 </section>

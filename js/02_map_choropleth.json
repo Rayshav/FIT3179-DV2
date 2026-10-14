@@ -1,0 +1,303 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "World choropleth map of short-term visitor arrivals to Australia by country of residence, with a slider to choose the year (1991 to 2025).",
+  "width": "container",
+  "height": 560,
+  "params": [
+    {
+      "name": "year",
+      "value": 2025,
+      "bind": {
+        "input": "range",
+        "min": 1991,
+        "max": 2025,
+        "step": 1,
+        "name": "Year "
+      }
+    }
+  ],
+  "projection": {
+    "type": "equalEarth",
+    "rotate": [
+      -150,
+      0,
+      0
+    ]
+  },
+  "config": {
+    "font": "Source Sans 3",
+    "background": "transparent",
+    "view": {
+      "stroke": null
+    },
+    "legend": {
+      "orient": "bottom",
+      "direction": "horizontal",
+      "titleFontSize": 13,
+      "titleColor": "#4f6670",
+      "labelFontSize": 12,
+      "labelColor": "#4f6670",
+      "symbolType": "square"
+    }
+  },
+  "layer": [
+    {
+      "description": "Base layer: every country in light sand, for countries the ABS does not list separately",
+      "data": {
+        "url": "data/countries-110m.json",
+        "format": {
+          "type": "topojson",
+          "feature": "countries"
+        }
+      },
+      "mark": {
+        "type": "geoshape",
+        "fill": "#e6dccb",
+        "stroke": "#fffdf9",
+        "strokeWidth": 0.5
+      },
+      "transform": [
+        {
+          "filter": "datum.id !== '010'"
+        }
+      ]
+    },
+    {
+      "description": "Australia, the destination, picked out in sand",
+      "data": {
+        "url": "data/countries-110m.json",
+        "format": {
+          "type": "topojson",
+          "feature": "countries"
+        }
+      },
+      "transform": [
+        {
+          "filter": "datum.id === '036'"
+        }
+      ],
+      "mark": {
+        "type": "geoshape",
+        "fill": "#b8894f",
+        "stroke": "#fffdf9",
+        "strokeWidth": 0.5
+      }
+    },
+    {
+      "description": "Countries coloured by visitor arrivals in the chosen year",
+      "data": {
+        "url": "data/arrivals_by_country_year.csv"
+      },
+      "transform": [
+        {
+          "calculate": "toNumber(datum.year)",
+          "as": "year_num"
+        },
+        {
+          "filter": "datum.year_num === year && datum.small == 0"
+        },
+        {
+          "calculate": "datum.arrivals < 10000 ? 'Under 10k' : datum.arrivals < 50000 ? '10k–50k' : datum.arrivals < 100000 ? '50k–100k' : datum.arrivals < 250000 ? '100k–250k' : datum.arrivals < 500000 ? '250k–500k' : datum.arrivals < 1000000 ? '500k–1m' : 'Over 1m'",
+          "as": "band"
+        },
+        {
+          "calculate": "pad(toString(datum.id), 3, '0', 'left')",
+          "as": "id3"
+        },
+        {
+          "lookup": "id3",
+          "from": {
+            "data": {
+              "url": "data/countries-110m.json",
+              "format": {
+                "type": "topojson",
+                "feature": "countries"
+              }
+            },
+            "key": "id"
+          },
+          "as": "geo"
+        }
+      ],
+      "mark": {
+        "type": "geoshape",
+        "stroke": "#fffdf9",
+        "strokeWidth": 0.5
+      },
+      "encoding": {
+        "shape": {
+          "field": "geo",
+          "type": "geojson"
+        },
+        "color": {
+          "field": "band",
+          "type": "ordinal",
+          "scale": {
+            "domain": [
+              "Under 10k",
+              "10k–50k",
+              "50k–100k",
+              "100k–250k",
+              "250k–500k",
+              "500k–1m",
+              "Over 1m"
+            ],
+            "range": [
+              "#d7ebe6",
+              "#b0d8d1",
+              "#83c1b9",
+              "#55a6a0",
+              "#2e8a86",
+              "#0f6f6c",
+              "#0a4c4b"
+            ]
+          },
+          "legend": {
+            "title": "Visitor arrivals in the selected year",
+            "orient": "bottom",
+            "direction": "horizontal",
+            "columns": 7,
+            "symbolType": "square",
+            "symbolSize": 220,
+            "labelFontSize": 12,
+            "columnPadding": 14
+          }
+        },
+        "tooltip": [
+          {
+            "field": "country",
+            "title": "Country"
+          },
+          {
+            "field": "year",
+            "title": "Year"
+          },
+          {
+            "field": "arrivals",
+            "type": "quantitative",
+            "title": "Visitor arrivals",
+            "format": ","
+          },
+          {
+            "field": "rank",
+            "type": "quantitative",
+            "title": "Rank (of 50 listed)"
+          }
+        ]
+      }
+    },
+    {
+      "description": "Singapore and Hong Kong are too small to see as shapes, so they are drawn as dots in the same colours",
+      "data": {
+        "url": "data/arrivals_by_country_year.csv"
+      },
+      "transform": [
+        {
+          "calculate": "toNumber(datum.year)",
+          "as": "year_num"
+        },
+        {
+          "filter": "datum.year_num === year && datum.small == 1"
+        },
+        {
+          "calculate": "datum.arrivals < 10000 ? 'Under 10k' : datum.arrivals < 50000 ? '10k–50k' : datum.arrivals < 100000 ? '50k–100k' : datum.arrivals < 250000 ? '100k–250k' : datum.arrivals < 500000 ? '250k–500k' : datum.arrivals < 1000000 ? '500k–1m' : 'Over 1m'",
+          "as": "band"
+        }
+      ],
+      "mark": {
+        "type": "circle",
+        "size": 70,
+        "stroke": "#fffdf9",
+        "strokeWidth": 1,
+        "opacity": 1
+      },
+      "encoding": {
+        "longitude": {
+          "field": "lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        },
+        "color": {
+          "field": "band",
+          "type": "ordinal",
+          "scale": {
+            "domain": [
+              "Under 10k",
+              "10k–50k",
+              "50k–100k",
+              "100k–250k",
+              "250k–500k",
+              "500k–1m",
+              "Over 1m"
+            ],
+            "range": [
+              "#d7ebe6",
+              "#b0d8d1",
+              "#83c1b9",
+              "#55a6a0",
+              "#2e8a86",
+              "#0f6f6c",
+              "#0a4c4b"
+            ]
+          },
+          "legend": null
+        },
+        "tooltip": [
+          {
+            "field": "country",
+            "title": "Country"
+          },
+          {
+            "field": "year",
+            "title": "Year"
+          },
+          {
+            "field": "arrivals",
+            "type": "quantitative",
+            "title": "Visitor arrivals",
+            "format": ","
+          },
+          {
+            "field": "rank",
+            "type": "quantitative",
+            "title": "Rank (of 50 listed)"
+          }
+        ]
+      }
+    },
+    {
+      "description": "Label for Australia",
+      "data": {
+        "values": [
+          {
+            "lon": 134,
+            "lat": -25,
+            "label": "Australia"
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "fontSize": 12,
+        "fontWeight": 700,
+        "color": "#fffdf9"
+      },
+      "encoding": {
+        "longitude": {
+          "field": "lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "label"
+        }
+      }
+    }
+  ]
+}
