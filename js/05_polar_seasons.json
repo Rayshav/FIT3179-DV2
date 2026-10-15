@@ -1,0 +1,82 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Polar area chart (Coxcomb), one per country: the share of each country's visitors arriving in each month, averaged over 2023 to 2025. January is at the top and months run clockwise like a clock face. Wedge area shows the share; the busiest month is shown in sand.",
+  "data": { "url": "data/seasons_by_country.csv" },
+  "transform": [
+    { "calculate": "toNumber(datum.month)", "as": "m" },
+    { "calculate": "toNumber(datum.share)", "as": "s" },
+    { "calculate": "datum.m - 1", "as": "t0" },
+    { "calculate": "datum.m", "as": "t1" },
+    { "calculate": "datum.m - 0.5", "as": "tmid" }
+  ],
+  "facet": {
+    "field": "country",
+    "type": "nominal",
+    "sort": ["United Kingdom", "China", "Japan", "Singapore", "United States", "India", "South Korea", "New Zealand"],
+    "header": {
+      "title": null,
+      "labelFontSize": 20,
+      "labelFontWeight": 700,
+      "labelColor": "#0f2a36",
+      "labelPadding": 4,
+      "labelFont": "\"Source Sans 3\", \"Helvetica Neue\", Arial, sans-serif"
+    }
+  },
+  "columns": 4,
+  "spacing": { "row": 36, "column": 40 },
+  "spec": {
+    "width": 260,
+    "height": 290,
+    "layer": [
+      {
+        "description": "One wedge per month; wedge area shows the share of the year's visitors",
+        "mark": { "type": "arc", "stroke": "#ffffff", "strokeWidth": 1 },
+        "encoding": {
+          "theta": { "field": "t0", "type": "quantitative", "scale": { "domain": [0, 12], "range": [0, 6.2832] } },
+          "theta2": { "field": "t1" },
+          "radius": { "field": "s", "type": "quantitative", "scale": { "type": "sqrt", "domain": [0, 18], "range": [8, 108] } },
+          "color": { "condition": { "test": "datum.peak == 1", "value": "#d9a85b" }, "value": "#0e6e6b" },
+          "opacity": { "condition": { "test": "datum.peak == 1", "value": 1 }, "value": 0.8 },
+          "tooltip": [
+            { "field": "country", "title": "Country" },
+            { "field": "month_name", "title": "Month" },
+            { "field": "s", "type": "quantitative", "title": "Share of the year (%)", "format": ".1f" },
+            { "field": "avg_arrivals", "type": "quantitative", "title": "Average arrivals", "format": "," }
+          ]
+        }
+      },
+      {
+        "description": "Dashed guide ring at an average month (one-twelfth of the year)",
+        "mark": { "type": "arc", "fill": null, "stroke": "#9fb3ad", "strokeDash": [3, 3], "strokeWidth": 1 },
+        "encoding": {
+          "theta": { "datum": 0, "type": "quantitative", "scale": { "domain": [0, 12], "range": [0, 6.2832] } },
+          "theta2": { "datum": 12 },
+          "radius": { "datum": 8.33, "type": "quantitative", "scale": { "type": "sqrt", "domain": [0, 18], "range": [8, 108] } }
+        }
+      },
+      {
+        "description": "Month initials around the outside, like a clock face",
+        "transform": [{ "calculate": "slice(datum.month_name, 0, 1)", "as": "initial" }],
+        "mark": { "type": "text", "fontSize": 13, "fontWeight": 600, "color": "#4a6270", "radius": 121 },
+        "encoding": {
+          "theta": { "field": "tmid", "type": "quantitative", "scale": { "domain": [0, 12], "range": [0, 6.2832] } },
+          "text": { "field": "initial" }
+        }
+      },
+      {
+        "description": "Busiest month and its share, written under each chart",
+        "transform": [
+          { "filter": "datum.peak == 1" },
+          { "calculate": "'Busiest: ' + datum.month_name + ' (' + format(datum.s, '.1f') + '%)'", "as": "label" }
+        ],
+        "mark": { "type": "text", "fontSize": 16, "fontWeight": 700, "color": "#0f2a36", "x": 130, "y": 282 },
+        "encoding": { "text": { "field": "label" } }
+      }
+    ]
+  },
+  "config": {
+    "font": "\"Source Sans 3\", \"Helvetica Neue\", Arial, sans-serif",
+    "background": "transparent",
+    "view": { "stroke": null }
+  }
+}

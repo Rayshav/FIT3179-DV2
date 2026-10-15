@@ -1,0 +1,65 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Heatmap of the share of each state's international visitors arriving in each month, averaged over 2023 to 2025. States are ordered from north to south.",
+  "width": "container",
+  "height": 400,
+  "data": { "url": "data/seasons_by_state.csv" },
+  "transform": [
+    { "calculate": "toNumber(datum.share)", "as": "s" },
+    { "calculate": "toNumber(datum.month)", "as": "m" },
+    { "joinaggregate": [{ "op": "max", "field": "s", "as": "row_max" }], "groupby": ["state"] }
+  ],
+  "encoding": {
+    "x": {
+      "field": "month_name",
+      "type": "ordinal",
+      "sort": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+      "title": null,
+      "axis": { "orient": "top", "labelAngle": 0, "labelFontSize": 14, "labelFontWeight": 600, "labelColor": "#0f2a36", "domain": false, "ticks": false, "labelPadding": 8 }
+    },
+    "y": {
+      "field": "state",
+      "type": "ordinal",
+      "sort": { "field": "order", "op": "min" },
+      "title": null,
+      "axis": { "labelFontSize": 14, "labelFontWeight": 600, "labelColor": "#0f2a36", "domain": false, "ticks": false, "labelPadding": 10, "labelLimit": 320 }
+    }
+  },
+  "layer": [
+    {
+      "mark": { "type": "rect", "stroke": "#ffffff", "strokeWidth": 2, "cornerRadius": 2 },
+      "encoding": {
+        "color": {
+          "field": "s",
+          "type": "quantitative",
+          "title": "Share of the state's year (%)",
+          "scale": { "domain": [4, 9, 15], "range": ["#eaf4f1", "#83c1b9", "#0a4c4b"], "interpolate": "hcl" },
+          "legend": { "orient": "bottom", "direction": "horizontal", "gradientLength": 260, "titleFontSize": 13, "labelFontSize": 12, "titleColor": "#4a6270", "labelColor": "#4a6270", "format": ".0f", "titleLimit": 400 }
+        },
+        "tooltip": [
+          { "field": "state", "title": "State" },
+          { "field": "month_name", "title": "Month" },
+          { "field": "s", "type": "quantitative", "title": "Share of the year (%)", "format": ".1f" },
+          { "field": "avg_arrivals", "type": "quantitative", "title": "Average arrivals", "format": "," }
+        ]
+      }
+    },
+    {
+      "description": "Sand outline on each state's busiest month",
+      "transform": [{ "filter": "datum.s == datum.row_max" }],
+      "mark": { "type": "rect", "fill": null, "stroke": "#d9a85b", "strokeWidth": 4, "cornerRadius": 2 }
+    },
+    {
+      "mark": { "type": "text", "fontSize": 13, "fontWeight": 600 },
+      "encoding": {
+        "text": { "field": "s", "type": "quantitative", "format": ".1f" },
+        "color": { "condition": { "test": "datum.s >= 10", "value": "#ffffff" }, "value": "#0f2a36" }
+      }
+    }
+  ],
+  "config": {
+    "font": "\"Source Sans 3\", \"Helvetica Neue\", Arial, sans-serif",
+    "background": "transparent",
+    "view": { "stroke": null }
+  }
+}

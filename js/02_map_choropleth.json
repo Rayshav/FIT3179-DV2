@@ -25,7 +25,7 @@
     ]
   },
   "config": {
-    "font": "Source Sans 3",
+    "font":  "\"Source Sans 3\", \"Helvetica Neue\", Arial, sans-serif",
     "background": "transparent",
     "view": {
       "stroke": null
