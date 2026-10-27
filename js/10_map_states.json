@@ -1,0 +1,122 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Proportional symbol map of Australia: one circle per state or territory, sized by the number of short-term international visitor arrivals in 2025 (state of intended stay). Each state has its own colour, matching the slope chart.",
+  "width": 900,
+  "height": 620,
+  "projection": {"type": "mercator"},
+  "layer": [
+    {
+      "description": "State and territory outlines",
+      "data": {"url": "data/australia_states.json", "format": {"type": "topojson", "feature": "states.min"}},
+      "mark": {"type": "geoshape", "fill": "#e6dccb", "stroke": "#ffffff", "strokeWidth": 1.5}
+    },
+    {
+      "description": "One circle per state; circle area shows 2025 visitor arrivals, colour shows the state",
+      "data": {"url": "data/states_2019_2025.csv"},
+      "transform": [
+        {"calculate": "toNumber(datum.arrivals_2025)", "as": "a"},
+        {"calculate": "toNumber(datum.share_2025)", "as": "sh"}
+      ],
+      "mark": {"type": "circle", "opacity": 0.9, "stroke": "#ffffff", "strokeWidth": 1.5},
+      "encoding": {
+        "longitude": {"field": "lon", "type": "quantitative"},
+        "latitude": {"field": "lat", "type": "quantitative"},
+        "color": {
+          "field": "abbr",
+          "type": "nominal",
+          "legend": null,
+          "scale": {
+            "domain": ["WA", "NSW", "SA", "Tas", "Vic", "Qld", "ACT", "NT"],
+            "range": ["#0e6e6b", "#0f2a36", "#3a8fc4", "#5a9a3c", "#7b5ea7", "#b07d2b", "#c2567f", "#c0612b"]
+          }
+        },
+        "size": {
+          "field": "a",
+          "type": "quantitative",
+          "scale": {"type": "sqrt", "domain": [0, 3400000], "range": [0, 9000]},
+          "legend": {
+            "title": "Visitor arrivals in 2025",
+            "values": [100000, 1000000, 3000000],
+            "orient": "right",
+            "symbolFillColor": "#9fb3ad",
+            "symbolStrokeColor": "#ffffff",
+            "titleFontSize": 13,
+            "labelFontSize": 13,
+            "titleColor": "#4a6270",
+            "labelColor": "#0f2a36",
+            "titleLimit": 300,
+            "labelExpr": "datum.value >= 1000000 ? format(datum.value/1000000,'.0f') + ' million' : format(datum.value/1000,'.0f') + 'k'"
+          }
+        },
+        "tooltip": [
+          {"field": "state", "title": "State"},
+          {"field": "a", "type": "quantitative", "title": "Visitor arrivals (2025)", "format": ","},
+          {"field": "sh", "type": "quantitative", "title": "Share of all arrivals (%)", "format": ".1f"}
+        ]
+      }
+    },
+    {
+      "description": "Labels: state name, then arrivals and share of all arrivals",
+      "data": {"url": "data/states_2019_2025.csv"},
+      "transform": [
+        {
+          "lookup": "abbr",
+          "from": {
+            "data": {
+              "values": [
+                {"abbr": "NSW", "llon": 150.0, "llat": -31.6, "al": "left"},
+                {"abbr": "Qld", "llon": 147.2, "llat": -21.6, "al": "left"},
+                {"abbr": "Vic", "llon": 141.4, "llat": -37.4, "al": "right"},
+                {"abbr": "WA", "llon": 121.9, "llat": -29.4, "al": "center"},
+                {"abbr": "NT", "llon": 133.4, "llat": -22.3, "al": "center"},
+                {"abbr": "SA", "llon": 135.6, "llat": -33.0, "al": "center"},
+                {"abbr": "ACT", "llon": 150.8, "llat": -36.1, "al": "left"},
+                {"abbr": "Tas", "llon": 148.9, "llat": -42.6, "al": "left"}
+              ]
+            },
+            "key": "abbr",
+            "fields": ["llon", "llat", "al"]
+          }
+        },
+        {"calculate": "toNumber(datum.arrivals_2025)", "as": "a"},
+        {"calculate": "datum.a >= 1000000 ? format(datum.a/1000000,'.2f') + 'm' : format(datum.a/1000,'.0f') + 'k'", "as": "short"},
+        {"calculate": "[datum.abbr == 'ACT' ? 'ACT' : datum.state, datum.short + ' · ' + format(toNumber(datum.share_2025),'.0f') + '%']", "as": "label"}
+      ],
+      "layer": [
+        {
+          "transform": [{"filter": "datum.al == 'left'"}],
+          "mark": {"type": "text", "fontSize": 14, "fontWeight": 700, "color": "#0f2a36", "align": "left", "baseline": "middle", "lineHeight": 18},
+          "encoding": {
+            "longitude": {"field": "llon", "type": "quantitative"},
+            "latitude": {"field": "llat", "type": "quantitative"},
+            "text": {"field": "label"}
+          }
+        },
+        {
+          "transform": [{"filter": "datum.al == 'right'"}],
+          "mark": {"type": "text", "fontSize": 14, "fontWeight": 700, "color": "#0f2a36", "align": "right", "baseline": "middle", "lineHeight": 18},
+          "encoding": {
+            "longitude": {"field": "llon", "type": "quantitative"},
+            "latitude": {"field": "llat", "type": "quantitative"},
+            "text": {"field": "label"}
+          }
+        },
+        {
+          "transform": [{"filter": "datum.al == 'center'"}],
+          "mark": {"type": "text", "fontSize": 14, "fontWeight": 700, "color": "#0f2a36", "align": "center", "baseline": "middle", "lineHeight": 18},
+          "encoding": {
+            "longitude": {"field": "llon", "type": "quantitative"},
+            "latitude": {"field": "llat", "type": "quantitative"},
+            "text": {"field": "label"}
+          }
+        }
+      ]
+    }
+  ],
+  "config": {
+    "font": "\"Source Sans 3\", \"Helvetica Neue\", Arial, sans-serif",
+    "background": "transparent",
+    "view": {"stroke": null},
+    "legend": {"offset": 40}
+  }
+}

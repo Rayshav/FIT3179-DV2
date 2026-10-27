@@ -1,0 +1,86 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Bubble plot of 21 countries: number of trips to Australia (horizontal, log scale) against average spend in Australia per trip (vertical). Bubble area shows the average length of stay in nights and colour shows the world region. Year ending June 2026.",
+  "width": "container",
+  "height": 520,
+  "data": {"url": "data/country_spend_2026.csv"},
+  "transform": [
+    {"calculate": "toNumber(datum.trips)", "as": "t"},
+    {"calculate": "toNumber(datum.spend_per_trip)", "as": "p"},
+    {"calculate": "toNumber(datum.nights_per_trip)", "as": "n"},
+    {"calculate": "toNumber(datum.spend_m)", "as": "sm"},
+    {"calculate": "toNumber(datum.label_x)", "as": "label_x"},
+    {"calculate": "toNumber(datum.label_y)", "as": "label_y"}
+  ],
+  "encoding": {
+    "x": {
+      "scale": {"type": "log", "domain": [35000, 1800000]},
+      "title": "Trips to Australia (log scale)",
+      "axis": {"grid": true, "gridColor": "#e3ebe8", "domain": false, "ticks": false, "labelFontSize": 13, "labelColor": "#4a6270", "titleColor": "#4a6270", "titleFontSize": 13, "values": [50000, 100000, 200000, 500000, 1000000], "format": "~s"}
+    },
+    "y": {
+      "scale": {"domain": [0, 12500]},
+      "title": "Average spend in Australia per trip (AUD)",
+      "axis": {"grid": true, "gridColor": "#e3ebe8", "domain": false, "ticks": false, "labelFontSize": 13, "labelColor": "#4a6270", "titleColor": "#4a6270", "titleFontSize": 13, "format": "$,.0f", "tickCount": 6}
+    }
+  },
+  "layer": [
+    {
+      "mark": {"type": "circle", "stroke": "#ffffff", "strokeWidth": 1.5, "opacity": 0.85},
+      "encoding": {
+        "x": {"field": "t", "type": "quantitative"},
+        "y": {"field": "p", "type": "quantitative"},
+        "size": {
+          "field": "n",
+          "type": "quantitative",
+          "scale": {"domain": [0, 90], "range": [0, 2200]},
+          "legend": {"title": "Average nights per trip", "values": [15, 40, 80], "orient": "right", "symbolFillColor": "#9fb3ad", "symbolStrokeColor": "#ffffff", "titleFontSize": 13, "labelFontSize": 13, "titleColor": "#4a6270", "labelColor": "#0f2a36", "titleLimit": 300}
+        },
+        "color": {
+          "field": "region",
+          "type": "nominal",
+          "scale": {"domain": ["Asia", "Europe", "Americas", "Oceania"], "range": ["#0e6e6b", "#d9a85b", "#0f2a36", "#c0612b"]},
+          "legend": {"title": "Region", "orient": "right", "symbolType": "circle", "symbolSize": 220, "titleFontSize": 13, "labelFontSize": 13, "titleColor": "#4a6270", "labelColor": "#0f2a36", "symbolOpacity": 0.85}
+        },
+        "tooltip": [
+          {"field": "country", "title": "Country"},
+          {"field": "region", "title": "Region"},
+          {"field": "t", "type": "quantitative", "title": "Trips", "format": ","},
+          {"field": "p", "type": "quantitative", "title": "Spend per trip", "format": "$,.0f"},
+          {"field": "n", "type": "quantitative", "title": "Average nights", "format": ".0f"},
+          {"field": "sm", "type": "quantitative", "title": "Total spend in Australia ($M)", "format": ",.0f"}
+        ]
+      }
+    },
+    {
+      "transform": [
+        {"filter": "datum.label_align == 'left'"},
+        {"calculate": "datum.country == 'China' ? ['China', '$11,136 a trip, 55 nights'] : (datum.country == 'New Zealand' ? ['New Zealand', '$1,802 a trip, 12 nights'] : datum.country)", "as": "lab"}
+      ],
+      "mark": {"type": "text", "align": "left", "baseline": "middle", "fontSize": 13, "fontWeight": 600, "color": "#0f2a36", "lineHeight": 16},
+      "encoding": {
+        "x": {"field": "label_x", "type": "quantitative"},
+        "y": {"field": "label_y", "type": "quantitative"},
+        "text": {"field": "lab"}
+      }
+    },
+    {
+      "transform": [
+        {"filter": "datum.label_align == 'right'"},
+        {"calculate": "datum.country == 'China' ? ['China', '$11,136 a trip, 55 nights'] : (datum.country == 'New Zealand' ? ['New Zealand', '$1,802 a trip, 12 nights'] : datum.country)", "as": "lab"}
+      ],
+      "mark": {"type": "text", "align": "right", "baseline": "middle", "fontSize": 13, "fontWeight": 600, "color": "#0f2a36", "lineHeight": 16},
+      "encoding": {
+        "x": {"field": "label_x", "type": "quantitative"},
+        "y": {"field": "label_y", "type": "quantitative"},
+        "text": {"field": "lab"}
+      }
+    }
+  ],
+  "config": {
+    "font": "\"Source Sans 3\", \"Helvetica Neue\", Arial, sans-serif",
+    "background": "transparent",
+    "view": {"stroke": null},
+    "legend": {"offset": 28, "rowPadding": 8}
+  }
+}

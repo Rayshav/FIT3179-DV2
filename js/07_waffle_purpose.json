@@ -1,0 +1,68 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Two waffle charts side by side. Left: of every 100 international trips to Australia, how many were for each main reason. Right: of every $100 visitors spent in Australia, how much came from each group. Students are highlighted. Year ending June 2026.",
+  "data": {"url": "data/purpose_waffle.csv", "format": {"type": "csv"}},
+  "transform": [
+    {"calculate": "toNumber(datum.col)", "as": "c"},
+    {"calculate": "toNumber(datum.row)", "as": "r"}
+  ],
+  "facet": {
+    "field": "measure",
+    "type": "nominal",
+    "sort": ["Of every 100 trips, students made 7", "Of every $100 spent, students spent $37"],
+    "header": {
+      "title": null,
+      "labelFontSize": 20,
+      "labelFontWeight": 700,
+      "labelColor": "#0f2a36",
+      "labelFont": "\"Source Sans 3\", \"Helvetica Neue\", Arial, sans-serif",
+      "labelPadding": 10,
+      "labelLimit": 420
+    }
+  },
+  "columns": 2,
+  "spacing": {"column": 90},
+  "spec": {
+    "width": 400,
+    "height": 400,
+    "mark": {"type": "rect", "stroke": "#ffffff", "strokeWidth": 3, "cornerRadius": 3},
+    "encoding": {
+      "x": {"field": "c", "type": "ordinal", "axis": null},
+      "y": {"field": "r", "type": "ordinal", "axis": null},
+      "color": {
+        "field": "purpose",
+        "type": "nominal",
+        "scale": {
+          "domain": ["Education", "Holiday", "Visiting friends & family", "Work and other reasons"],
+          "range": ["#d9a85b", "#0e6e6b", "#6fb0aa", "#b9c6c2"]
+        },
+        "sort": ["Education", "Holiday", "Visiting friends & family", "Work and other reasons"],
+        "legend": {
+          "title": "Main reason for the trip",
+          "orient": "top",
+          "direction": "horizontal",
+          "columns": 4,
+          "symbolType": "square",
+          "symbolSize": 220,
+          "labelFontSize": 14,
+          "titleFontSize": 14,
+          "labelColor": "#0f2a36",
+          "titleColor": "#4a6270",
+          "labelLimit": 220,
+          "titleLimit": 300,
+          "columnPadding": 16
+        }
+      },
+      "order": {"field": "order", "type": "quantitative"},
+      "tooltip": [
+        {"field": "measure", "title": "Measure"},
+        {"field": "purpose", "title": "Reason"}
+      ]
+    }
+  },
+  "config": {
+    "font": "\"Source Sans 3\", \"Helvetica Neue\", Arial, sans-serif",
+    "background": "transparent",
+    "view": {"stroke": null}
+  }
+}

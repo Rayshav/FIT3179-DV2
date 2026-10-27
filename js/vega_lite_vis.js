@@ -4,3 +4,8 @@ vegaEmbed("#chart_03", "js/03_map_flow.json", { actions: false });
 vegaEmbed("#chart_04", "js/04_bump_chart.json", { actions: false });
 vegaEmbed("#chart_05", "js/05_polar_seasons.json", { actions: false });
 vegaEmbed("#chart_06", "js/06_heatmap_states.json", { actions: false });
+vegaEmbed("#chart_07", "js/07_waffle_purpose.json", { actions: false });
+vegaEmbed("#chart_08", "js/08_bar_spend_purpose.json", { actions: false });
+vegaEmbed("#chart_09", "js/09_bubble_country_spend.json", { actions: false });
+vegaEmbed("#chart_10", "js/10_map_states.json", { actions: false });
+vegaEmbed("#chart_11", "js/11_slope_states.json", { actions: false });

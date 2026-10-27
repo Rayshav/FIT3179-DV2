@@ -1,0 +1,121 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Slope chart: each state's 2025 short-term visitor arrivals as a percentage of its 2019 level (2019 = 100). Each state has its own colour; Western Australia, the only state above its 2019 level, and the Northern Territory, the furthest below, have thicker lines. The dashed line shows Australia overall.",
+  "width": "container",
+  "height": 480,
+  "data": {"url": "data/states_2019_2025.csv"},
+  "transform": [
+    {"calculate": "toNumber(datum.recovery_pct)", "as": "r"},
+    {"calculate": "(datum.abbr == 'ACT' ? 'ACT' : datum.state) + '  ' + format(datum.r, '.0f') + '%'", "as": "endlabel"},
+    {"calculate": "{'WA':106.3,'NSW':97.3,'SA':95.7,'Tas':92.6,'Vic':91.2,'Qld':89.8,'ACT':88.4,'NT':79.2}[datum.abbr]", "as": "label_y"}
+  ],
+  "layer": [
+    {
+      "description": "Reference line: the 2019 level",
+      "data": {"values": [{"y": 100}]},
+      "mark": {"type": "rule", "color": "#0f2a36", "strokeWidth": 1},
+      "encoding": {
+        "y": {
+          "field": "y",
+          "type": "quantitative",
+          "scale": {"domain": [76, 110], "nice": false},
+          "axis": {"values": [80, 85, 90, 95, 100, 105, 110], "grid": true, "gridColor": "#e3ebe8", "domain": false, "ticks": false, "labelFontSize": 13, "labelColor": "#4a6270", "titleColor": "#4a6270", "titleFontSize": 13},
+          "title": "Visitor arrivals, % of 2019 level (2019 = 100)"
+        }
+      }
+    },
+    {
+      "description": "Reference line: Australia overall in 2025",
+      "data": {"values": [{"y": 94.4, "t": "Australia overall 94%"}]},
+      "layer": [
+        {"mark": {"type": "rule", "color": "#4a6270", "strokeDash": [5, 4], "strokeWidth": 1.5}},
+        {
+          "mark": {"type": "text", "align": "left", "x": 8, "dy": -9, "fontSize": 13, "fontWeight": 600, "color": "#4a6270"},
+          "encoding": {"text": {"field": "t"}}
+        }
+      ],
+      "encoding": {
+        "y": {"field": "y", "type": "quantitative", "scale": {"domain": [76, 110], "nice": false}}
+      }
+    },
+    {
+      "description": "One line per state, from 100 in 2019 to its 2025 level",
+      "transform": [
+        {"fold": ["start", "end"], "as": ["k", "v"]},
+        {"calculate": "datum.k == 'start' ? 100 : datum.r", "as": "y"},
+        {"calculate": "datum.k == 'start' ? '2019' : '2025'", "as": "year"}
+      ],
+      "encoding": {
+        "x": {
+          "field": "year",
+          "type": "ordinal",
+          "title": null,
+          "scale": {"padding": 0.3},
+          "axis": {"labelAngle": 0, "labelFontSize": 16, "labelFontWeight": 700, "labelColor": "#0f2a36", "domain": false, "ticks": false, "orient": "top", "labelPadding": 10}
+        },
+        "y": {
+          "field": "y",
+          "type": "quantitative",
+          "scale": {"domain": [76, 110], "nice": false},
+          "axis": {"values": [80, 85, 90, 95, 100, 105, 110], "grid": true, "gridColor": "#e3ebe8", "domain": false, "ticks": false, "labelFontSize": 13, "labelColor": "#4a6270", "titleColor": "#4a6270", "titleFontSize": 13},
+          "title": "Visitor arrivals, % of 2019 level (2019 = 100)"
+        },
+        "color": {
+          "field": "abbr",
+          "type": "nominal",
+          "legend": null,
+          "scale": {
+            "domain": ["WA", "NSW", "SA", "Tas", "Vic", "Qld", "ACT", "NT"],
+            "range": ["#0e6e6b", "#0f2a36", "#3a8fc4", "#5a9a3c", "#7b5ea7", "#b07d2b", "#c2567f", "#c0612b"]
+          }
+        },
+        "detail": {"field": "state"}
+      },
+      "layer": [
+        {
+          "mark": {"type": "line"},
+          "encoding": {
+            "strokeWidth": {"condition": {"test": "datum.abbr == 'WA' || datum.abbr == 'NT'", "value": 4}, "value": 2.5}
+          }
+        },
+        {
+          "transform": [{"filter": "datum.year == '2025'"}],
+          "mark": {"type": "circle", "size": 90, "opacity": 1, "stroke": "#ffffff", "strokeWidth": 1.5},
+          "encoding": {
+            "tooltip": [
+              {"field": "state", "title": "State"},
+              {"field": "arrivals_2019", "type": "quantitative", "title": "Arrivals 2019", "format": ","},
+              {"field": "arrivals_2025", "type": "quantitative", "title": "Arrivals 2025", "format": ","},
+              {"field": "r", "type": "quantitative", "title": "2025 as % of 2019", "format": ".1f"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "description": "State labels on the 2025 side, in each state's colour, spaced so they do not overlap",
+      "mark": {"type": "text", "align": "left", "dx": 14, "fontSize": 14, "fontWeight": 700, "baseline": "middle"},
+      "encoding": {
+        "x": {"datum": "2025", "type": "ordinal"},
+        "y": {"field": "label_y", "type": "quantitative", "scale": {"domain": [76, 110], "nice": false}},
+        "text": {"field": "endlabel"},
+        "color": {
+          "field": "abbr",
+          "type": "nominal",
+          "legend": null,
+          "scale": {
+            "domain": ["WA", "NSW", "SA", "Tas", "Vic", "Qld", "ACT", "NT"],
+            "range": ["#0e6e6b", "#0f2a36", "#3a8fc4", "#5a9a3c", "#7b5ea7", "#b07d2b", "#c2567f", "#c0612b"]
+          }
+        }
+      }
+    }
+  ],
+  "resolve": {"scale": {"color": "independent"}},
+  "config": {
+    "font": "\"Source Sans 3\", \"Helvetica Neue\", Arial, sans-serif",
+    "background": "transparent",
+    "view": {"stroke": null}
+  },
+  "padding": {"left": 5, "right": 30, "top": 5, "bottom": 5}
+}

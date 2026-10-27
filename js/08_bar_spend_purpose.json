@@ -1,0 +1,50 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Bar chart of average spend in Australia per trip by main reason for travel, year ending June 2026, sorted from highest to lowest. Education is highlighted.",
+  "width": "container",
+  "height": 330,
+  "data": {"url": "data/purpose_2026.csv"},
+  "transform": [
+    {"calculate": "toNumber(datum.spend_per_trip)", "as": "v"},
+    {"calculate": "datum.purpose == 'Education' ? 'hi' : 'lo'", "as": "g"}
+  ],
+  "encoding": {
+    "y": {
+      "field": "purpose",
+      "type": "nominal",
+      "sort": {"field": "v", "order": "descending"},
+      "title": null,
+      "axis": {"labelFontSize": 15, "labelFontWeight": 600, "labelColor": "#0f2a36", "domain": false, "ticks": false, "labelPadding": 10, "labelLimit": 260}
+    },
+    "x": {
+      "field": "v",
+      "type": "quantitative",
+      "title": "Average spend in Australia per trip (AUD)",
+      "scale": {"domain": [0, 31000]},
+      "axis": {"format": "$,.0f", "grid": true, "gridColor": "#e3ebe8", "domain": false, "ticks": false, "labelFontSize": 13, "labelColor": "#4a6270", "titleColor": "#4a6270", "titleFontSize": 13, "tickCount": 6}
+    }
+  },
+  "layer": [
+    {
+      "mark": {"type": "bar", "cornerRadiusEnd": 3, "height": {"band": 0.7}},
+      "encoding": {
+        "color": {"field": "g", "type": "nominal", "legend": null, "scale": {"domain": ["hi", "lo"], "range": ["#d9a85b", "#0e6e6b"]}},
+        "tooltip": [
+          {"field": "purpose", "title": "Reason"},
+          {"field": "v", "type": "quantitative", "title": "Spend per trip", "format": "$,.0f"},
+          {"field": "trips", "type": "quantitative", "title": "Trips", "format": ","},
+          {"field": "nights_per_trip", "title": "Average nights per trip"}
+        ]
+      }
+    },
+    {
+      "mark": {"type": "text", "align": "left", "dx": 8, "fontSize": 15, "fontWeight": 700, "color": "#0f2a36"},
+      "encoding": {"text": {"field": "v", "type": "quantitative", "format": "$,.0f"}}
+    }
+  ],
+  "config": {
+    "font": "\"Source Sans 3\", \"Helvetica Neue\", Arial, sans-serif",
+    "background": "transparent",
+    "view": {"stroke": null}
+  }
+}

@@ -1,0 +1,9 @@
+﻿state,abbr,lat,lon,arrivals_2019,arrivals_2025,recovery_pct,share_2025
+New South Wales,NSW,-32.2,146.9,3482840,3364640,96.6,37.7
+Victoria,Vic,-37,144.4,2509730,2277730,90.8,25.5
+Queensland,Qld,-22.3,144.5,2031680,1843090,90.7,20.6
+South Australia,SA,-30.2,135.6,276130,264490,95.8,3
+Western Australia,WA,-25.6,121.9,884070,939450,106.3,10.5
+Tasmania,Tas,-42.1,146.6,95060,87710,92.3,1
+Northern Territory,NT,-19.4,133.4,76870,60910,79.2,0.7
+Australian Capital Territory,ACT,-35.5,149,109190,98520,90.2,1.1
