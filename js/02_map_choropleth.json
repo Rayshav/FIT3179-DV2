@@ -37,6 +37,7 @@
       "titleColor": "#4f6670",
       "labelFontSize": 12,
       "labelColor": "#4f6670",
+      "titleLimit": 400,
       "symbolType": "square"
     }
   },
